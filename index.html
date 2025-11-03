@@ -1,0 +1,556 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>自我介紹 — 王小明（範例）</title>
+
+  <!-- 基本 SEO 與 PWA-friendly -->
+  <meta name="description" content="王小明 — 前端工程師｜Portfolio｜聯絡我" />
+  <meta name="theme-color" content="#0f766e" />
+
+  <style>
+    /* =========================
+       全域變數（方便更換）
+       ========================= */
+    :root{
+      --bg:#f7fbfb;
+      --card:#ffffff;
+      --primary:#0f766e;
+      --accent:#2bb6a8;
+      --muted:#6b7280;
+      --glass: rgba(255,255,255,0.6);
+      --radius:12px;
+      --shadow: 0 8px 24px rgba(15,23,42,0.08);
+      --max-width:1100px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, "Courier New", monospace;
+    }
+    /* 暗色主題（由 JS 切換 body.data-theme="dark"） */
+    body[data-theme="dark"]{
+      --bg:#071826;
+      --card:#05202a;
+      --primary:#0ea5a1;
+      --accent:#14b8a6;
+      --muted:#94a3b8;
+      --glass: rgba(255,255,255,0.03);
+      color: #e6eef0;
+    }
+
+    /* =========================
+       Reset & 基本樣式
+       ========================= */
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: "Noto Sans TC", "Helvetica Neue", Arial, sans-serif;
+      background: linear-gradient(180deg,var(--bg), #ffffff 60%);
+      color:#0b1b1a;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.45;
+      padding:24px;
+      display:flex;
+      justify-content:center;
+      align-items:flex-start;
+    }
+    main.wrapper{
+      width:100%;
+      max-width:var(--max-width);
+      background:transparent;
+      display:grid;
+      grid-template-columns: 1fr 320px;
+      gap:28px;
+      align-items:start;
+    }
+
+    /* =========================
+       左側主要欄（介紹 / 作品清單）
+       ========================= */
+    header.profile{
+      grid-column:1 / -1;
+      display:flex;
+      gap:20px;
+      align-items:center;
+      margin-bottom:6px;
+    }
+    .avatar{
+      width:110px;
+      height:110px;
+      border-radius:18px;
+      overflow:hidden;
+      flex-shrink:0;
+      box-shadow: var(--shadow);
+      background:linear-gradient(180deg,var(--card),var(--glass));
+      border: 1px solid rgba(15,23,42,0.04);
+    }
+    .avatar img{width:100%;height:100%;object-fit:cover;display:block}
+
+    .hero{
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+    .name{
+      display:flex;
+      gap:12px;
+      align-items:center;
+    }
+    .name h1{
+      margin:0;
+      font-size:20px;
+      letter-spacing:0.2px;
+    }
+    .title{
+      margin:0;
+      color:var(--muted);
+      font-size:14px;
+    }
+    .tagline{
+      margin-top:8px;
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    /* 小工具列 */
+    .tools{
+      display:flex;
+      gap:8px;
+      margin-top:10px;
+      flex-wrap:wrap;
+    }
+    .btn{
+      background:var(--primary);
+      color:white;
+      border:0;
+      padding:8px 12px;
+      border-radius:10px;
+      cursor:pointer;
+      font-weight:600;
+      font-size:14px;
+    }
+    .btn.ghost{
+      background:transparent;
+      color:var(--primary);
+      border:1px solid rgba(15,23,42,0.06);
+    }
+
+    /* 內容卡片 */
+    .card{
+      background:var(--card);
+      border-radius:var(--radius);
+      padding:18px;
+      box-shadow:var(--shadow);
+      border: 1px solid rgba(15,23,42,0.03);
+    }
+    section.about{margin-top:6px}
+    .lead{color:var(--muted); margin:0 0 12px 0; font-size:14px}
+
+    /* 技能標籤 */
+    .skills{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+    .chip{
+      background: linear-gradient(180deg, rgba(11,27,26,0.03), rgba(11,27,26,0.01));
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:13px;
+      color: #094240;
+      border:1px solid rgba(11,27,26,0.04);
+    }
+    body[data-theme="dark"] .chip{color:#dff7f5}
+
+    /* 作品列表 */
+    .projects{
+      display:grid;
+      gap:12px;
+      margin-top:8px;
+    }
+    .project{
+      display:flex;
+      gap:12px;
+      align-items:center;
+    }
+    .project .thumb{
+      width:84px;height:64px;border-radius:8px;overflow:hidden;flex-shrink:0;background:#eef7f6;
+    }
+    .project h4{margin:0;font-size:15px}
+    .project p{margin:4px 0 0 0;color:var(--muted);font-size:13px}
+
+    /* =========================
+       右側側欄（聯絡、下載、時間軸）
+       ========================= */
+    aside.side{
+      position:sticky;
+      top:24px;
+      height:fit-content;
+      align-self:start;
+      display:flex;
+      flex-direction:column;
+      gap:16px;
+    }
+    .contact-row{display:flex;gap:8px;align-items:center}
+    .icon{
+      width:36px;height:36px;border-radius:8px;background:var(--glass);display:inline-flex;align-items:center;justify-content:center;font-weight:700;color:var(--primary)
+    }
+    .meta{font-size:14px;color:var(--muted)}
+
+    /* 簡歷 / 下載按鈕 */
+    .download-row{display:flex;gap:8px}
+    .small{font-size:13px;color:var(--muted)}
+
+    /* =========================
+       Footer（頁尾）
+       ========================= */
+    footer.site-foot{
+      grid-column:1 / -1;
+      text-align:center;
+      margin-top:18px;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    /* =========================
+       響應式
+       ========================= */
+    @media (max-width:960px){
+      main.wrapper{grid-template-columns:1fr}
+      aside.side{position:static}
+      header.profile{flex-direction:row;gap:12px}
+    }
+    @media (max-width:420px){
+      .name h1{font-size:18px}
+      .avatar{width:88px;height:88px}
+      .project .thumb{width:72px;height:52px}
+    }
+
+    /* 小動畫 */
+    .fade-up{transform:translateY(6px);opacity:0;transition:all .45s ease}
+    .fade-up.show{transform:none;opacity:1}
+  </style>
+</head>
+<body>
+  <!--
+    ===== 可修改的個人資料區（請替換成你的內容） =====
+    name: 你的名字
+    title: 職稱
+    location / email / phone / social: 聯絡方式
+    projects: 若要新增 project，直接在 <div id="projects-data"> JSON 陣列加入
+  -->
+  <script>
+    window.__PROFILE = {
+      name: '王小明',
+      title: '前端工程師 & UI 設計師',
+      tagline: '熱衷設計直覺介面、寫出可維護的元件化前端程式。喜歡把複雜問題拆成簡單解決方案。',
+      avatar: 'https://images.unsplash.com/photo-1607746882042-944635dfe10e?w=800&q=60&auto=format&fit=crop', // 換成你的照片網址
+      location: '台北市, 台灣',
+      email: 'hello@example.com',
+      phone: '+886 912 345 678',
+      socials: [
+        {name:'GitHub', url:'https://github.com/example'},
+        {name:'LinkedIn', url:'https://www.linkedin.com/in/example'},
+        {name:'Behance', url:'https://www.behance.net/example'}
+      ],
+      skills: ['HTML','CSS','JavaScript','TypeScript','React','Vue','Node.js','Accessibility','Design Systems'],
+      projects: [
+        {title:'作品一 — 電商模板', desc:'響應式購物體驗，包含購物車與結帳流程', thumb:'https://via.placeholder.com/320x200?text=Project+1', url:'#'},
+        {title:'作品二 — 介面元件庫', desc:'可重用的 UI 元件與文件網站', thumb:'https://via.placeholder.com/320x200?text=Project+2', url:'#'},
+        {title:'作品三 — 個人部落格', desc:'用 JAMstack 建置，SEO 與文章分類', thumb:'https://via.placeholder.com/320x200?text=Project+3', url:'#'}
+      ]
+    };
+  </script>
+
+  <main class="wrapper" role="main" aria-labelledby="profile-title">
+    <!-- Header / 個人頭像區 -->
+    <header class="profile" aria-labelledby="profile-title">
+      <div class="avatar card" aria-hidden="true">
+        <img id="avatar-img" alt="大頭照" src="" />
+      </div>
+
+      <div class="hero">
+        <div class="name">
+          <h1 id="profile-title">名字（示範）</h1>
+          <button id="theme-toggle" class="btn ghost" aria-pressed="false" title="切換亮/暗主題">切換主題</button>
+        </div>
+        <p class="title" id="profile-title-sub">職稱</p>
+        <p class="tagline" id="profile-tagline">一句話自我介紹</p>
+
+        <div class="tools" role="toolbar" aria-label="快速操作">
+          <button id="copy-email" class="btn">複製 Email</button>
+          <a id="download-vcard" class="btn ghost" href="#" download="vcard.vcf">下載 vCard</a>
+          <a id="open-resume" class="btn" href="#" target="_blank" rel="noopener">開啟履歷（PDF）</a>
+        </div>
+      </div>
+    </header>
+
+    <!-- 左：介紹與作品（主要內容） -->
+    <section class="card about" aria-labelledby="about-title">
+      <h2 id="about-title">關於我</h2>
+      <p class="lead" id="about-lead"></p>
+
+      <h3>技能</h3>
+      <div class="skills" id="skills-list" role="list" aria-label="技能列表"></div>
+
+      <h3 style="margin-top:14px">作品集</h3>
+      <div class="projects" id="projects-list" aria-live="polite"></div>
+
+      <h3 style="margin-top:14px">經歷 / 教育（簡短）</h3>
+      <div>
+        <p class="small" style="margin:0 0 6px 0"><strong>2022 — 至今</strong>｜某科技公司，前端資深工程師：主導 UI 元件化與無障礙升級。</p>
+        <p class="small" style="margin:0 0 6px 0"><strong>2018 — 2021</strong>｜某設計工作室，資深前端工程師：負責設計系統與跨團隊整合。</p>
+      </div>
+    </section>
+
+    <!-- 右側：聯絡資訊與額外資料 -->
+    <aside class="side" aria-labelledby="contact-title">
+      <div class="card contact" >
+        <h3 id="contact-title">聯絡我</h3>
+        <div class="contact-row">
+          <div class="icon" aria-hidden="true">📍</div>
+          <div><div class="meta" id="meta-location"></div></div>
+        </div>
+        <div class="contact-row" style="margin-top:8px">
+          <div class="icon" aria-hidden="true">✉️</div>
+          <div>
+            <div class="meta" id="meta-email"></div>
+            <div class="small" style="margin-top:6px">
+              <button id="email-btn" class="btn ghost" style="padding:6px 8px">寄信給我</button>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:12px">
+          <div class="small">社群</div>
+          <div style="display:flex;gap:8px;margin-top:8px" id="social-links"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>下載 / 快速連結</h3>
+        <div class="download-row" style="margin-top:8px">
+          <a id="download-resume" class="btn ghost" href="#" download="Resume.pdf">下載 Resume</a>
+          <a id="link-portfolio" class="btn" href="#" target="_blank" rel="noopener">作品網站</a>
+        </div>
+        <p class="small" style="margin-top:8px">或使用下方按鈕複製 Email 以快速聯絡。</p>
+      </div>
+
+      <div class="card">
+        <h3>聯絡表單（範例）</h3>
+        <form id="contact-form" novalidate>
+          <label class="small" for="c-name">姓名</label>
+          <input id="c-name" name="name" required style="width:100%;padding:8px;border-radius:8px;border:1px solid #eee;margin-top:6px" />
+          <label class="small" for="c-msg" style="margin-top:8px;display:block">訊息</label>
+          <textarea id="c-msg" name="message" rows="4" required style="width:100%;padding:8px;border-radius:8px;border:1px solid #eee;margin-top:6px"></textarea>
+          <button type="submit" class="btn" style="margin-top:8px;width:100%">送出</button>
+          <div id="form-msg" class="small" role="status" aria-live="polite" style="margin-top:8px;color:var(--muted)"></div>
+        </form>
+      </div>
+    </aside>
+
+    <!-- footer -->
+    <footer class="site-foot">
+      © <span id="year"></span> <strong id="owner-name"></strong> ・ Built with ❤️ — 可自由修改與使用
+    </footer>
+  </main>
+
+  <script>
+    /************************************************************************
+     * 初始化：把 __PROFILE 內容注入到 DOM（一步步清晰執行）
+     ************************************************************************/
+    (function initProfile(){
+      const p = window.__PROFILE || {};
+      // 基本欄位
+      document.getElementById('avatar-img').src = p.avatar || '';
+      document.getElementById('profile-title').textContent = p.name || '你的名字';
+      document.getElementById('profile-title-sub').textContent = p.title || '';
+      document.getElementById('profile-tagline').textContent = p.tagline || '';
+      document.getElementById('about-lead').textContent = p.tagline || '';
+
+      // skills
+      const skillsEl = document.getElementById('skills-list');
+      (p.skills || []).forEach(s => {
+        const span = document.createElement('span');
+        span.className = 'chip';
+        span.textContent = s;
+        skillsEl.appendChild(span);
+      });
+
+      // projects
+      const projectsEl = document.getElementById('projects-list');
+      (p.projects || []).forEach((pr, idx) => {
+        const box = document.createElement('article');
+        box.className = 'project fade-up';
+        box.innerHTML = `
+          <div class="thumb" aria-hidden="true">
+            <img src="${pr.thumb}" alt="${(pr.title || '').replace(/"/g,'')}" style="width:100%;height:100%;object-fit:cover" />
+          </div>
+          <div style="flex:1">
+            <h4>${pr.title}</h4>
+            <p>${pr.desc}</p>
+            <div style="margin-top:8px"><a href="${pr.url}" class="small" style="color:var(--primary);text-decoration:none">查看專案 →</a></div>
+          </div>
+        `;
+        projectsEl.appendChild(box);
+        // small stagger show
+        setTimeout(()=>box.classList.add('show'), idx*80 + 100);
+      });
+
+      // contact
+      document.getElementById('meta-location').textContent = p.location || '';
+      document.getElementById('meta-email').textContent = p.email || '';
+
+      // socials
+      const socialRoot = document.getElementById('social-links');
+      (p.socials || []).forEach(s => {
+        const a = document.createElement('a');
+        a.href = s.url;
+        a.target = '_blank';
+        a.rel = 'noopener';
+        a.className = 'btn ghost';
+        a.style.padding = '6px 8px';
+        a.textContent = s.name;
+        socialRoot.appendChild(a);
+      });
+
+      // footer & downloads
+      document.getElementById('year').textContent = new Date().getFullYear();
+      document.getElementById('owner-name').textContent = p.name || '';
+
+      // vCard / resume links（示範：vCard 由 JS 產生；resume 可換成實際 pdf）
+      const vcardAnchor = document.getElementById('download-vcard');
+      vcardAnchor.href = genVCardDataURL(p);
+
+      const resumeBtn = document.getElementById('download-resume');
+      // 若你有 resume url，填入 __PROFILE.resumeUrl
+      if(p.resumeUrl){
+        resumeBtn.href = p.resumeUrl;
+      }else{
+        // 預設禁用（可放置示意PDF路徑）
+        resumeBtn.href = '#';
+        resumeBtn.addEventListener('click', (e)=>{ e.preventDefault(); alert('尚未上傳 Resume PDF，請在 __PROFILE.resumeUrl 設定。'); });
+      }
+
+      const openResume = document.getElementById('open-resume');
+      openResume.href = p.resumeUrl || '#';
+      openResume.addEventListener('click', (e)=>{
+        if(!p.resumeUrl){ e.preventDefault(); alert('尚未上傳 Resume PDF，請在 __PROFILE.resumeUrl 設定。'); }
+      });
+
+      const portfolioLink = document.getElementById('link-portfolio');
+      portfolioLink.href = p.portfolioUrl || '#';
+      if(!p.portfolioUrl){
+        portfolioLink.addEventListener('click', (e)=>{ e.preventDefault(); alert('尚未設定作品網站（__PROFILE.portfolioUrl）'); });
+      }
+    })();
+
+    /************************************************************************
+     * 主題切換（亮 / 暗）
+     ************************************************************************/
+    (function themeToggle(){
+      const btn = document.getElementById('theme-toggle');
+      // 初始化：若使用者系統偏好是 dark，則預設暗
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if(prefersDark) document.body.setAttribute('data-theme','dark');
+
+      btn.addEventListener('click', ()=>{
+        const isDark = document.body.getAttribute('data-theme') === 'dark';
+        if(isDark){
+          document.body.removeAttribute('data-theme');
+          btn.setAttribute('aria-pressed','false');
+        }else{
+          document.body.setAttribute('data-theme','dark');
+          btn.setAttribute('aria-pressed','true');
+        }
+      });
+    })();
+
+    /************************************************************************
+     * 複製 Email 到剪貼簿
+     ************************************************************************/
+    (function copyEmail(){
+      const btn = document.getElementById('copy-email');
+      const email = window.__PROFILE.email || '';
+      btn.addEventListener('click', async () => {
+        try{
+          await navigator.clipboard.writeText(email);
+          btn.textContent = '已複製 Email';
+          setTimeout(()=> btn.textContent = '複製 Email', 1600);
+        }catch(e){
+          // fallback：使用 prompt
+          prompt('請手動複製 Email：', email);
+        }
+      });
+
+      // 直接寄信按鈕
+      document.getElementById('email-btn').addEventListener('click', ()=>{
+        location.href = `mailto:${email}`;
+      });
+    })();
+
+    /************************************************************************
+     * 表單：前端驗證（模擬送出）
+     ************************************************************************/
+    (function contactForm(){
+      const form = document.getElementById('contact-form');
+      const msg = document.getElementById('form-msg');
+      form.addEventListener('submit', (e)=>{
+        e.preventDefault();
+        const name = form.name.value.trim();
+        const message = form.message.value.trim();
+        if(!name || !message){
+          msg.textContent = '請填寫姓名與訊息。';
+          return;
+        }
+        // 模擬異步送出（實務改為 fetch 到 API）
+        msg.textContent = '正在送出...';
+        setTimeout(()=>{
+          msg.textContent = '已送出，感謝你的聯絡！我會在 2 個工作天內回覆。';
+          form.reset();
+        }, 800);
+      });
+    })();
+
+    /************************************************************************
+     * vCard 產生器（簡易）
+     ************************************************************************/
+    function genVCardDataURL(profile){
+      const name = profile.name || '';
+      const email = profile.email || '';
+      const tel = profile.phone || '';
+      const adr = profile.location || '';
+      const lines = [
+        'BEGIN:VCARD',
+        'VERSION:3.0',
+        `FN:${name}`,
+        `EMAIL;TYPE=internet:${email}`,
+        `TEL:${tel}`,
+        `ADR:${adr}`,
+        `END:VCARD`
+      ];
+      const blob = new Blob([lines.join('\r\n')], {type:'text/vcard'});
+      return URL.createObjectURL(blob);
+    }
+
+    /************************************************************************
+     * 簡單無障礙與鍵盤支援：Esc 清除提示（示範）
+     ************************************************************************/
+    (function a11yHelpers(){
+      document.addEventListener('keydown', (e)=>{
+        if(e.key === 'Escape'){
+          // 例如：關閉任何暫時提示 - 這裡為示範操作，可擴充
+          const msg = document.getElementById('form-msg');
+          if(msg) msg.textContent = '';
+        }
+      });
+    })();
+
+    /************************************************************************
+     * 可擴充：若你想把 __PROFILE 從後端或 JSON 載入，請告訴我，
+     * 我可以替你把資料 fetch() 與 hydration 的程式碼加上。
+     ************************************************************************/
+  </script>
+</body>
+</html>
